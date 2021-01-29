@@ -1,0 +1,47 @@
+-- this very cool yes
+
+_G.true1 = "true"
+_G.true2 = "true"
+_G.true3 = "true"
+_G.true4 = "true"
+_G.true5 = "true"
+_G.true6 = "true"
+_G.true7 = "true"
+_G.true8 = "true"
+_G.true9 = "true"
+_G.true10 = "true"
+
+if true1 ~= "true" then
+	print("Couldnt Get Passed Gateway 1")
+end
+
+if _G.true1 == "true" then
+	print("Gateway 1 Passed")
+	if _G.true2 == "true" then
+		print("Gateway 2 Passed")
+		if _G.true3 == "true" then
+			print("Gateway 3 Passed")
+			if _G.true4 == "true" then
+				print("Gateway 4 Passed")
+				if _G.true5 == "true" then
+					print("Gateway 5 Passed")
+					if _G.true6 == "true" then
+						print("Gateway 6 Passed")
+						if _G.true7 == "true" then
+							print("Gateway 7 Passed")
+							if _G.true8 == "true" then
+								print("Gateway 8 Passed")
+								if _G.true9 == "true" then
+									print("Gateway 9 Passed")
+									if _G.true10 == "true" then
+										print("Gateway 10 Passed")
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
