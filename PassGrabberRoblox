@@ -12,8 +12,6 @@ will lag your pc.
 
 -- get pranked lol
 
-_G.user = "username here"
-
 local library = loadstring(game:HttpGet("the lib link was here but im not leaking"))()
 local venyx = library.new("Password Fucker - Made by Dominos#6510", 5013109572)
 
