@@ -1,0 +1,3 @@
+-- ignore this pls
+wait(5)
+game.Players.LocalPlayer:Kick("You Have Been Permamently Banned For: Exploiting Time Remaining: 999999 Days")
