@@ -365,7 +365,7 @@ local toggle2 = section1:AddToggle({text = "Watermark", callback = function(stat
         bruuuh.TextSize = 16.000
         bruuuh.TextStrokeTransparency = 0.000
         bruuuh.TextXAlignment = Enum.TextXAlignment.Left
-        local TextGiven = "Dominos Addons Private"
+        local TextGiven = "Dominos Addons Public"
         local TextGiven2 = "Logged In As:"
         -- Scripts:
         local function ZAAZA_fake_script() -- LocalScript 
