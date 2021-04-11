@@ -1,0 +1,2 @@
+-- put this loadstring in your cuteware scripts for auto update :)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDominos/DominoHub/master/dominos_addons"))();
