@@ -1,0 +1,407 @@
+-- dominos addons made by dominos pizza
+
+local cw = game:GetService("Cuteware")
+local tabs = cw:GetTabs()
+
+local scriptTab = tabs.Scripts
+local scriptColumn = scriptTab:GetColumn(2)
+
+local section1 = scriptColumn:AddSection("dominos addons")
+
+section1:AddLabel("Main")
+
+local button1 = section1:AddButton({text = "Old Silent Aim Method", callback = function()
+    local player = game.Players.LocalPlayer
+    local mouse = player:GetMouse()
+    bind = "u"
+
+    mouse.KeyDown:connect(function(key)
+        if key == bind then
+            if _G.silentaim_exe == nil then
+                _G.silentaim_exe = true
+        
+                local Players = game:GetService("Players")
+                local LocalPlayer = Players.LocalPlayer
+                local mouse = LocalPlayer:GetMouse()
+                local Camera = workspace.CurrentCamera
+                local Debris = game:GetService("Debris")
+                local UserInputService = game:GetService("UserInputService")
+                local target = false
+                local RunService = game:GetService("RunService")
+                
+                local features = {
+                silentaim = true;
+                fov = 999999;
+                }
+                
+                function getnearest()
+                local nearestmagnitude = math.huge
+                local nearestenemy = nil
+                local vector = nil
+                for i,v in next, Players:GetChildren() do
+                if v ~= Players.LocalPlayer then
+                if v.Character and  v.Character:FindFirstChild("HumanoidRootPart") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
+                local vector, onScreen = Camera:WorldToScreenPoint(v.Character["HumanoidRootPart"].Position)
+                if onScreen then
+                local ray = Ray.new(
+                Camera.CFrame.p,
+                (v.Character["Head"].Position-Camera.CFrame.p).unit*500
+                )
+                local ignore = {
+                LocalPlayer.Character,
+                }
+                local hit,position,normal=workspace:FindPartOnRayWithIgnoreList(ray,ignore)
+                if hit and hit:FindFirstAncestorOfClass("Model") and Players:FindFirstChild(hit:FindFirstAncestorOfClass("Model").Name)then
+                local magnitude = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(vector.X, vector.Y)).magnitude
+                if magnitude < nearestmagnitude and magnitude <= features["fov"] then
+                nearestenemy = v
+                nearestmagnitude = magnitude
+                end
+                end
+                end
+                end
+                end
+                end
+                return nearestenemy
+                end
+                
+                
+                local meta = getrawmetatable(game)
+                setreadonly(meta, false)
+                local oldNamecall = meta.__namecall
+                meta.__namecall = newcclosure(function(...)
+                local method = getnamecallmethod()
+                local args = {...}
+                if string.find(method,'Ray') then
+                if target then
+                args[2] = Ray.new(workspace.CurrentCamera.CFrame.Position, (target + Vector3.new(0,(workspace.CurrentCamera.CFrame.Position-target).Magnitude/500,0) - workspace.CurrentCamera.CFrame.Position).unit * 500)
+                end
+                end
+                return oldNamecall(unpack(args))
+                end)
+                
+                RunService:BindToRenderStep("silentaim",1,function()
+                if UserInputService:IsMouseButtonPressed(0) and features["silentaim"] and Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("Humanoid") and Players.LocalPlayer.Character.Humanoid.Health > 0 then
+                local enemy = getnearest()
+                if enemy and enemy.Character and enemy.Character:FindFirstChild("Humanoid") and enemy.Character.Humanoid.Health > 0 and _G.silentaim == true then                
+                local vector, onScreen = Camera:WorldToScreenPoint(enemy.Character["Head"].Position)
+                local magnitude = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(vector.X, vector.Y)).magnitude
+                target = workspace[enemy.Name]["Head"].Position
+                end
+                else
+                target = nil
+                end
+                end)
+            end
+        
+            if _G.silentaim == nil then
+                _G.silentaim = true
+            end
+
+            if _G.silentaim == false then
+                _G.silentaim = true
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "Dominos Loader";
+                    Text = "Old Silent Method Enabled";
+                    Icon = "";
+                    Duration = 3;
+                })
+            else
+                _G.silentaim = false
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "Dominos Loader";
+                    Text = "Old Silent Method Disabled";
+                    Icon = "";
+                    Duration = 3;
+                })
+            end
+            wait(1)
+        end
+    end)
+end})
+
+local button1 = section1:AddButton({text = "Force Hide On Shot", callback = function()
+    local player = game.Players.LocalPlayer
+    local mouse = player:GetMouse()
+    bind = "t"
+
+    mouse.KeyDown:connect(function(key)
+        if key == bind then
+            location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+
+            cw.HitEvent.Event:connect(function()
+                if location ~= nil then
+                    for i=1, 8 do
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(location)
+                        wait(0.02)
+                    end
+                end
+                location = nil
+            end)
+        end
+    end)
+end})
+
+local button2 = section1:AddButton({text = "Teleport To Enemy Spawn", callback = function()
+    local CT = game.Workspace.Map.CTSpawns
+    local T = game.Workspace.Map.TSpawns
+    local Team1 = game.Teams['Counter-Terrorists']
+    local Team2 = game.Teams['Terrorists']
+    local Player = game.Players.LocalPlayer
+    local PlayerCharacter = Player.Character.HumanoidRootPart
+
+    if Player.Team == Team1 then 
+        PlayerCharacter.CFrame = T:FindFirstChildOfClass('Part').CFrame 
+    elseif Player.Team == Team2 then 
+        PlayerCharacter.CFrame = CT:FindFirstChildOfClass('Part').CFrame
+    end 
+end})
+
+local button3 = section1:AddButton({text = "Increase Firerate", callback = function()
+	for i,v in pairs(game.ReplicatedStorage.Weapons:GetChildren()) do
+		if v:FindFirstChild("Ammo") then
+			v.FireRate.Value = 0.05 -- lower the number = the higher the chance your pc goes boom
+		end
+	end
+end})
+
+section1:AddLabel("Performance")
+
+local button4 = section1:AddButton({text = "Increase Performance", callback = function()
+    for _,v in pairs(workspace:GetDescendants()) do
+        if v.ClassName == "Part"
+        or v.ClassName == "SpawnLocation"
+        or v.ClassName == "WedgePart"
+        or v.ClassName == "Terrain"
+        or v.ClassName == "MeshPart" then
+        v.Material = "Plastic"
+        end
+        end
+        
+        for _,v in pairs(workspace:GetDescendants()) do
+        if v.ClassName == "Decal"
+        or v.ClassName == "Texture" then
+        v:Destroy()
+        end
+    end
+end})
+
+local button5 = section1:AddButton({text = "Maximise Performance", callback = function()
+    for _,v in pairs(workspace:GetDescendants()) do
+        if v.ClassName == "Part"
+        or v.ClassName == "SpawnLocation"
+        or v.ClassName == "WedgePart"
+        or v.ClassName == "Terrain"
+        or v.ClassName == "MeshPart" then
+        v.BrickColor = BrickColor.new(155, 155, 155)
+        v.Material = "Plastic"
+        end
+        end
+        
+        for _,v in pairs(workspace:GetDescendants()) do
+        if v.ClassName == "Decal"
+        or v.ClassName == "Texture" then
+        v:Destroy()
+        end
+    end
+end})
+
+section1:AddLabel("Misc")
+
+local button6 = section1:AddButton({text = "Force Crash Client", callback = function()
+    while true do
+        print"best client crasher uwu"
+    end
+end})
+
+local toggle1 = section1:AddToggle({text = "Custom Hitsound", callback = function(state) -- thanks m4tt
+    hitsoundToggle = state
+
+    if hitsoundLoaded == nil then
+        hitsoundLoaded = true
+        cw.HitEvent.Event:connect(function()
+            if hitsoundToggle == true then
+                spawn(function()
+                    local marker = Instance.new("Sound")
+                    marker.Parent = game:GetService("SoundService")
+                    marker.SoundId = "rbxassetid://4817809188" -- super hot hitsound, stfu
+                    marker.Volume = 5
+                    marker:Play()
+                end)
+            end
+        end)
+    end
+end})
+
+local toggle2 = section1:AddToggle({text = "Watermark", callback = function(state)
+    if credits_notif == nil then
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Dominos Loader";
+            Text = "Credits To m4tt#9999 for the watermark.";
+            Icon = "";
+            Duration = 5;
+        })
+        credits_notif = true
+    end
+
+    if state == true then
+        local colorScheme = Color3.fromRGB(255, 0, 255)
+
+        local RunService = game:GetService("RunService")
+        
+        local honzuwuwtf = Instance.new("ScreenGui")
+        local W = Instance.new("Frame")
+        local HL = Instance.new("Frame")
+        local UIGradient = Instance.new("UIGradient")
+        local UICorner = Instance.new("UICorner")
+        local UICorner_2 = Instance.new("UICorner")
+        local HLTEXT = Instance.new("TextLabel")
+        local HL2 = Instance.new("Frame")
+        local UIGradient_2 = Instance.new("UIGradient")
+        local UICorner_3 = Instance.new("UICorner")
+        local W2 = Instance.new("Frame")
+        local HL_2 = Instance.new("Frame")
+        local UIGradient_3 = Instance.new("UIGradient")
+        local UICorner_4 = Instance.new("UICorner")
+        local W2Corner = Instance.new("UICorner")
+        local HLTEXT_2 = Instance.new("TextLabel")
+        local HL2_2 = Instance.new("Frame")
+        local UIGradient_4 = Instance.new("UIGradient")
+        local UICorner_5 = Instance.new("UICorner")
+        local bruuuh = Instance.new("TextLabel")
+        
+        honzuwuwtf.Name = "honzuwuwtf"
+        honzuwuwtf.Parent = game.CoreGui
+        honzuwuwtf.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        
+        W.Name = "W"
+        W.Parent = honzuwuwtf
+        W.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+        W.BackgroundTransparency = 0.300
+        W.BorderSizePixel = 0
+        W.Position = UDim2.new(0.869000018, 0, 0.00660065934, -30)
+        W.Size = UDim2.new(0, 244, 0, 16)
+        
+        HL.Name = "HL"
+        HL.Parent = W
+        HL.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HL.BorderSizePixel = 0
+        HL.Size = UDim2.new(0, 244, 0, 1)
+        
+        UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.48, Color3.fromRGB(255, 0, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+        UIGradient.Parent = HL
+        
+        UICorner.CornerRadius = UDim.new(0, 2)
+        UICorner.Parent = HL
+        
+        UICorner_2.CornerRadius = UDim.new(0, 2)
+        UICorner_2.Parent = W
+        
+        HLTEXT.Name = "HLTEXT"
+        HLTEXT.Parent = W
+        HLTEXT.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HLTEXT.BackgroundTransparency = 1.000
+        HLTEXT.Position = UDim2.new(0.0245901644, 0, 0.0625, 0)
+        HLTEXT.Size = UDim2.new(0, 238, 0, 15)
+        HLTEXT.Font = Enum.Font.RobotoMono
+        HLTEXT.Text = "watermarkname"
+        HLTEXT.TextColor3 = Color3.fromRGB(255, 255, 255)
+        HLTEXT.TextSize = 14.000
+        HLTEXT.TextStrokeTransparency = 0.000
+        HLTEXT.TextXAlignment = Enum.TextXAlignment.Left
+        HLTEXT.TextYAlignment = Enum.TextYAlignment.Top
+        
+        HL2.Name = "HL2"
+        HL2.Parent = W
+        HL2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HL2.BorderSizePixel = 0
+        HL2.Position = UDim2.new(0, 0, 0, -1)
+        HL2.Size = UDim2.new(0, 244, 0, 1)
+        
+        UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.48, Color3.fromRGB(255, 0, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+        UIGradient_2.Parent = HL2
+        
+        UICorner_3.CornerRadius = UDim.new(0, 2)
+        UICorner_3.Parent = HL2
+        
+        W2.Name = "W2"
+        W2.Parent = honzuwuwtf
+        W2.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+        W2.BackgroundTransparency = 0.300
+        W2.BorderSizePixel = 0
+        W2.Position = UDim2.new(0.869000018, 0, 0.0319032073, -20)
+        W2.Size = UDim2.new(0, 244, 0, 39)
+        
+        HL_2.Name = "HL"
+        HL_2.Parent = W2
+        HL_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HL_2.BorderSizePixel = 0
+        HL_2.Size = UDim2.new(0, 244, 0, 1)
+        
+        UIGradient_3.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.47, Color3.fromRGB(255, 0, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+        UIGradient_3.Parent = HL_2
+        
+        UICorner_4.CornerRadius = UDim.new(0, 2)
+        UICorner_4.Parent = HL_2
+        
+        W2Corner.CornerRadius = UDim.new(0, 2)
+        W2Corner.Name = "W2Corner"
+        W2Corner.Parent = W2
+        
+        HLTEXT_2.Name = "HLTEXT"
+        HLTEXT_2.Parent = W2
+        HLTEXT_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HLTEXT_2.BackgroundTransparency = 1.000
+        HLTEXT_2.Position = UDim2.new(0.0257598385, 0, 0.0056817471, 0)
+        HLTEXT_2.Size = UDim2.new(0, 234, 0, 15)
+        HLTEXT_2.Font = Enum.Font.RobotoMono
+        HLTEXT_2.Text = "watermarkname"
+        HLTEXT_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+        HLTEXT_2.TextSize = 14.000
+        HLTEXT_2.TextStrokeTransparency = 0.000
+        HLTEXT_2.TextXAlignment = Enum.TextXAlignment.Left
+        
+        HL2_2.Name = "HL2"
+        HL2_2.Parent = W2
+        HL2_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        HL2_2.BorderSizePixel = 0
+        HL2_2.Position = UDim2.new(0, 0, 0, -1)
+        HL2_2.Size = UDim2.new(0, 244, 0, 1)
+        
+        UIGradient_4.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.47, Color3.fromRGB(255, 0, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+        UIGradient_4.Parent = HL2_2
+        
+        UICorner_5.CornerRadius = UDim.new(0, 2)
+        UICorner_5.Parent = HL2_2
+        
+        bruuuh.Name = "bruuuh"
+        bruuuh.Parent = W2
+        bruuuh.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        bruuuh.BackgroundTransparency = 1.000
+        bruuuh.Position = UDim2.new(0.0260655135, 0, 0.390297145, 0)
+        bruuuh.Size = UDim2.new(0, 234, 0, 23)
+        bruuuh.Font = Enum.Font.RobotoMono
+        bruuuh.TextColor3 = Color3.fromRGB(255, 255, 255)
+        bruuuh.TextSize = 16.000
+        bruuuh.TextStrokeTransparency = 0.000
+        bruuuh.TextXAlignment = Enum.TextXAlignment.Left
+        local TextGiven = "Dominos Addons Private"
+        local TextGiven2 = "Logged In As:"
+        -- Scripts:
+        local function ZAAZA_fake_script() -- LocalScript 
+        
+            while wait() do
+                HLTEXT.Text = TextGiven
+                HLTEXT_2.Text = TextGiven2
+            end
+        end
+        coroutine.wrap(ZAAZA_fake_script)()
+        local function QYZPLWT_fake_script() -- bruuuh.LocalScript 
+            local script = Instance.new('LocalScript', bruuuh)
+            script.Parent.Text = game.Players.LocalPlayer.Name -- .. " | " .. game.PlaceId
+        end
+        coroutine.wrap(QYZPLWT_fake_script)()
+    else
+        game:GetService'CoreGui'.honzuwuwtf:destroy()
+    end
+end})
