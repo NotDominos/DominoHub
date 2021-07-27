@@ -1,2 +1,0 @@
--- join discord: discord.gg/SdeQpyq
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NotDominos/DominoHub/master/DominoHubBetaSource"))()
